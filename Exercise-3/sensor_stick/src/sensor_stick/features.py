@@ -11,7 +11,7 @@ def rgb_to_hsv(rgb_list):
 
 
 def compute_color_histograms(cloud, using_hsv=False):
-
+    print('color_historgam_start')
     # Compute histograms for the clusters
     point_colors_list = []
 
@@ -34,16 +34,25 @@ def compute_color_histograms(cloud, using_hsv=False):
         channel_3_vals.append(color[2])
     
     # TODO: Compute histograms
+    nbins=32
+    bins_range=(0, 256)
+    h_hist = np.histogram(channel_1_vals, bins=nbins, range=bins_range) 
+    s_hist = np.histogram(channel_2_vals, bins=nbins, range=bins_range) 
+    v_hist = np.histogram(channel_3_vals, bins=nbins, range=bins_range) 
 
     # TODO: Concatenate and normalize the histograms
+    hist_features = np.concatenate((h_hist[0], s_hist[0], v_hist[0])).astype(np.float64)
 
     # Generate random features for demo mode.  
     # Replace normed_features with your feature vector
-    normed_features = np.random.random(96) 
+    # normed_features = np.random.random(96) 
+    normed_features = hist_features / np.sum(hist_features)
+    print('color_historgam_end')
     return normed_features 
 
 
 def compute_normal_histograms(normal_cloud):
+    print('normal_historgam_start')
     norm_x_vals = []
     norm_y_vals = []
     norm_z_vals = []
@@ -56,11 +65,19 @@ def compute_normal_histograms(normal_cloud):
         norm_z_vals.append(norm_component[2])
 
     # TODO: Compute histograms of normal values (just like with color)
+    nbins=32
+    bins_range=(0, 1.0)
+    x_hist = np.histogram(norm_x_vals, bins=nbins, range=bins_range) 
+    y_hist = np.histogram(norm_y_vals, bins=nbins, range=bins_range) 
+    z_hist = np.histogram(norm_z_vals, bins=nbins, range=bins_range) 
 
     # TODO: Concatenate and normalize the histograms
+    hist_features = np.concatenate((x_hist[0], y_hist[0], z_hist[0])).astype(np.float64)
 
     # Generate random features for demo mode.  
     # Replace normed_features with your feature vector
-    normed_features = np.random.random(96)
+    # normed_features = np.random.random(96)
+    normed_features = hist_features / np.sum(hist_features)
 
+    print('normal_historgam_end')
     return normed_features
